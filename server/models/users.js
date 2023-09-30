@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
-const validator = require('validator')
-const bcrypt = require('bcryptjs')
+import mongoose from 'mongoose'
+import validator from 'validator'
+import bcrypt from 'bcryptjs'
 
 //name, email, password ,profileImage,bio, active 
 const userSchema = mongoose.Schema({
@@ -16,8 +16,8 @@ const userSchema = mongoose.Schema({
         validate: [validator.isEmail, 'please provide a valid email']
     },
     password: {
-        type: String,
         required: [true, 'Please provide a password'],
+        type: String,
         minlength: 8,
         select: false
     },
@@ -34,13 +34,18 @@ const userSchema = mongoose.Schema({
     },
 })
 
-userSchema.pre('save', function (next) {
+userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next()
-    this.password = bcrypt.hash(this.password, 12)
-    this.passwordConfirm = undefined;
+    console.log("hello@@@")
+    this.password = await bcrypt.hash(this.password, 12)
+    console.log(this.password)
     next()
 })
 
 userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
     return await bcrypt.compare(candidatePassword, userPassword)
 }
+
+const User = mongoose.model("user", userSchema)
+
+export default User
