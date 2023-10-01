@@ -1,7 +1,7 @@
 import catchAsync from '../utils/catchAsync.js'
 import AppError from '../utils/AppError.js'
 import Post from '../models/posts.js'
-
+import Likes from '../models/likes.js'
 // create post 
 export const createPost = catchAsync(async (req, res, next) => {
 
@@ -59,3 +59,35 @@ export const delelePost = catchAsync(async (req, res, next) => {
         delelePost
     })
 })
+
+// Likes 
+export const likepost = catchAsync(async (req, res, next) => {
+
+    const existingLike = await Likes.findOne({ postId: req.body.postId, userId: req.body.userId, })
+
+    if (existingLike) {
+        existingLike.status = !existingLike.status
+        await existingLike.save()
+    }
+    else {
+        await Likes.create({
+            postId: req.body.postId,
+            userId: req.body.userId,
+            likedBy: req.user._id,
+            status: req.body.status
+        })
+    }
+
+    const data = await Likes.findOne({ postId: req.body.postId, likedBy: req.user._id })
+    console.log(data)
+
+    // if status is false then delete the data 
+    await data.checkStatus(data.status, data.likedBy, data.postId)
+
+    res.status(200).json({
+        status: 'sucess',
+        data
+    })
+})
+
+
