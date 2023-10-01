@@ -32,7 +32,9 @@ const userSchema = mongoose.Schema({
         default: true,
         select: false
     },
-    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }]
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 })
 
 userSchema.pre('save', async function (next) {

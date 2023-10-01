@@ -26,7 +26,6 @@ const likeSchema = mongoose.Schema({
 likeSchema.method('checkStatus', async function (status, likedBy, postId) {
     try {
         if (status === false) {
-            console.log('hello@@@')
             const removeUserlike = await mongoose.model('likes').deleteOne({ likedBy, postId })
             if (!removeUserlike) {
                 return new AppError("no data found", 404)
@@ -38,6 +37,7 @@ likeSchema.method('checkStatus', async function (status, likedBy, postId) {
         console.log(err)
     }
 })
+
 const Likes = mongoose.model('likes', likeSchema)
 
 export default Likes

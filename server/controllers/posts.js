@@ -2,6 +2,7 @@ import catchAsync from '../utils/catchAsync.js'
 import AppError from '../utils/AppError.js'
 import Post from '../models/posts.js'
 import Likes from '../models/likes.js'
+import Comments from '../models/comments.js'
 // create post 
 export const createPost = catchAsync(async (req, res, next) => {
 
@@ -90,4 +91,30 @@ export const likepost = catchAsync(async (req, res, next) => {
     })
 })
 
+// add comments
+export const addComment = catchAsync(async (req, res, next) => {
+    const postComment = await Comments.create({
+        postId: req.body.postId,
+        userId: req.user._id,
+        comment: req.body.comment
+    })
+
+    res.status(201).json({
+        status: 'success',
+        postComment
+    })
+})
+
+export const deleteComment = catchAsync(async (req, res, next) => {
+    const deleteComment = await Comments.findByIdAndDelete(req.params.id)
+
+    if (!deleteComment) {
+        return new AppError('comment not found', 404)
+    }
+
+    res.status(200).json({
+        status: "success",
+        deleteComment
+    })
+})
 
