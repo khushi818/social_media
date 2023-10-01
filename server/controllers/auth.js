@@ -98,13 +98,6 @@ export const protect = catchAsync(async (req, res, next) => {
     if (!currentUser) {
         return next(new AppError('The user belonging to the token does no longer exists', 401))
     }
-    //4) check if user change password if the token was issued
-
-    if (currentUser.changedPasswordAfter(decoded.iat)) {
-        return next(
-            new AppError('User recently changed password! Please log in again', 401)
-        )
-    }
 
     // Grant access to protected route
     req.user = currentUser

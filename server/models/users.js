@@ -32,6 +32,7 @@ const userSchema = mongoose.Schema({
         default: true,
         select: false
     },
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }]
 })
 
 userSchema.pre('save', async function (next) {
@@ -46,6 +47,6 @@ userSchema.methods.correctPassword = async function (candidatePassword, userPass
     return await bcrypt.compare(candidatePassword, userPassword)
 }
 
-const User = mongoose.model("user", userSchema)
+const User = mongoose.model("User", userSchema)
 
 export default User

@@ -4,6 +4,8 @@ import globalErrorHandler from './controllers/error.js'
 import cookies from 'cookie-parser'
 import cors from 'cors'
 import authRoute from './routes/auth.js'
+import postRoute from './routes/posts.js'
+
 const app = express()
 
 app.use(express.json())
@@ -16,6 +18,8 @@ app.use(
 );
 
 app.use('/api/v1/auth', authRoute)
+app.use('/api/v1/posts', postRoute)
+
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on the server`, 404))
