@@ -3,6 +3,7 @@ import AppError from '../utils/AppError.js'
 import Post from '../models/posts.js'
 import Likes from '../models/likes.js'
 import Comments from '../models/comments.js'
+
 // create post 
 export const createPost = catchAsync(async (req, res, next) => {
 
