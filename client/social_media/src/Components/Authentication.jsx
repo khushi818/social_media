@@ -1,7 +1,11 @@
 import React from "react";
 import { Stack } from "@mui/material";
+import { ToastContainer } from "react-toastify";
 const Authentication = ({ children }) => {
-  return <Stack
+  return(
+    <>
+    <ToastContainer/> 
+  <Stack
      boxSizing={"border-box"}
      display={"flex"}
     justifyContent={"center"}
@@ -12,6 +16,8 @@ const Authentication = ({ children }) => {
   >
     {children}
     </Stack>;
+  </> 
+  )
 };
 
 export default Authentication;

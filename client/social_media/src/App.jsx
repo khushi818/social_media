@@ -9,6 +9,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/" element={<HomePage />} />
+          <Route path="*" element={<p>route doesn't exists 404</p>}/>
       </Routes>
   )
 }
