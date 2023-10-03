@@ -119,3 +119,15 @@ export const deleteComment = catchAsync(async (req, res, next) => {
     })
 })
 
+export const getAllComment = catchAsync(async (req, res, next) => {
+    const PostComment = await Comments.findAll({ postId: req.params.id })
+
+    if (!PostComment) {
+        return (new AppError("comments not found", 404))
+    }
+
+    res.json({
+        status: 'success',
+        PostComment
+    })
+})
