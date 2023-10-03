@@ -15,7 +15,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookies());
 app.use(
     cors({
-        origin: 'http://localhost:5173',
+        origin:
+            ['http://localhost:5173',
+                'https://social-media-henna-ten.vercel.app'],
         credentials: true
     })
 );
@@ -24,6 +26,7 @@ app.use(
 app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/posts', postRoute)
 app.use('/api/v1/users', userRoute)
+
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on the server`, 404))
