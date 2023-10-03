@@ -3,49 +3,56 @@ import { Box, Button, Stack, Typography } from '@mui/material'
 import Modal from '../../Components/Modal'
 import {TextField} from '@mui/material'
 import { useFormik } from 'formik'
+import { useGlobalContext } from '../../context/GlobalContext'
+import axios from 'axios'
+
 
 const EditProfile = () => {
   const [profileImage, setProfileImage] = useState(null);
+  const {setOpenEditProfile} = useGlobalContext()
   const formik = useFormik({
     initialValues: {  
-      Name: "",
+      name: "",
       bio:""
     },
     onSubmit: async (values) => {
-    //   alert(JSON.stringify(values, null, 2));
-    //   console.log(values);
-    //   const formdata = new FormData();
-    //   let key: any;
-    //   const val: any = { ...values };
-    //   for (key in val) {
-    //     formdata.append(key, val[key]);
-    //   }
-    //   formdata.append("productImage", productImage);
+      alert(JSON.stringify(values, null, 2));
 
-    //   const config = {
-    //     headers: {
-    //       "Content-type": "multipart/form-data",
-    //       // headers: { "Content-Type": "multipart/form-data" },
-    //     },
-    //     transformRequest: (formData: any) => formData,
-    //   };
+      const formdata = new FormData();
+      formdata.append("name", values.name);
+      formdata.append("bio", values.bio)
+      formdata.append("profileImage", profileImage);
+      const config = {
+        headers: {
+          "Content-type": "multipart/form-data",
+          // "Accept":"application/json, text/plain, */*"
+        },
+        transformRequest: (formData) => formData,
+      };
 
-    //   // console.log(formdata);
-    //   await axios
-    //     .post(`${BASE_URL}/api/v1/product`, formdata, config)
-    //     .then(() => console.log("success"));
+      await axios
+        .patch(`/users`, formdata, config)
+        .then(() => {
+          console.log("success")
+           setOpenEditProfile(false)
+        }).catch(err => console.log(err));
     },
   });
 
   return (
      <Modal>
          <Box
+           component={"form"}
            display={"flex"}
            flexDirection={"column"}
            backgroundColor="white"
+          action="/upload"
+        encType="multipart/form-data"
            padding="20px"
+           width={"500px"}
            borderRadius={"25px"}
            gap={"20px"}
+           onSubmit={formik.handleSubmit}
         sx={{
           justifyContent: "right",
           alignItems: "center",
@@ -73,16 +80,16 @@ const EditProfile = () => {
         <TextField
           required
           fullWidth
-          id="Name"
-          name="Name"
-          label="Name"
-          value={formik.values.Name}
+          id="name"
+          name="name"
+          label="name"
+          value={formik.values.name}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={
-            formik.touched.Name && Boolean(formik.errors.Name)
+            formik.touched.name && Boolean(formik.errors.name)
           }
-          helperText={formik.touched.Name && formik.errors.Name}
+          helperText={formik.touched.name && formik.errors.name}
         />
 
         <TextField
@@ -106,8 +113,8 @@ const EditProfile = () => {
           }
         />
        <Stack justifyContent={"space-between"} alignItems={"center"} direction={"row"} gap={"20px"}>           
-       <Button variant="contained">Save</Button>
-       <Button variant='outlined'>Cancel</Button>
+       <Button variant="contained" type="submit">Save</Button>
+       <Button variant='outlined' onClick={()=>setOpenEditProfile(false)}>Cancel</Button>
        </Stack>
        </Box>  
        

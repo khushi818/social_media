@@ -1,13 +1,21 @@
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ path: './.env' });
 import mongoose from "mongoose";
-import express from "express";
+import { v2 as cloudinary } from "cloudinary";
 import app from './index.js'
 
 const DB = (process.env.MONGO_URI).replace(
     "<password>",
     process.env.DATABASE_PASSWORD
 );
+
+
+cloudinary.config({
+    cloud_name: `${process.env.Cloud_Name}`,
+    api_key: `${process.env.Cloud_Api_Key}`,
+    api_secret: `${process.env.Api_Secret}`,
+})
+
 
 mongoose.connect(DB).then(() => {
     console.log("DB successful");

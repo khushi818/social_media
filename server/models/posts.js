@@ -6,6 +6,14 @@ const postSchema = mongoose.Schema({
         ref: 'User',
         required: true
     },
+    postImage: {
+        public_id: {
+            type: String,
+        },
+        url: {
+            type: String,
+        },
+    },
     title: {
         type: String,
         required: true

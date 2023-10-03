@@ -22,7 +22,12 @@ const userSchema = mongoose.Schema({
         select: false
     },
     profileImage: {
-        type: String,
+        public_id: {
+            type: String,
+        },
+        url: {
+            type: String,
+        },
     },
     bio: {
         type: String
@@ -39,9 +44,7 @@ const userSchema = mongoose.Schema({
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next()
-    console.log("hello@@@")
     this.password = await bcrypt.hash(this.password, 12)
-    console.log(this.password)
     next()
 })
 

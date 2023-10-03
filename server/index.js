@@ -7,6 +7,7 @@ import authRoute from './routes/auth.js'
 import postRoute from './routes/posts.js'
 import userRoute from './routes/users.js'
 
+
 const app = express()
 
 app.use(express.json())
@@ -14,9 +15,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookies());
 app.use(
     cors({
-        origin: "*",
+        origin: 'http://localhost:5173',
+        credentials: true
     })
 );
+
 
 app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/posts', postRoute)

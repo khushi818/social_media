@@ -11,7 +11,6 @@ export const signToken = id => {
 }
 
 export const signUp = catchAsync(async (req, res, next) => {
-    console.log("hello@@@")
     // anyone can sign up as different role  so define body explicitly
     const newUser = await User.create({
         name: req.body.name,
@@ -22,7 +21,7 @@ export const signUp = catchAsync(async (req, res, next) => {
 
     const token = signToken(newUser._id)
 
-    console.log(process.env.JWT_COOKIE_EXPIRES_IN, process.env.JWT_EXPIRES_IN, process.env.JWT_SECRET)
+    // console.log(process.env.JWT_COOKIE_EXPIRES_IN, process.env.JWT_EXPIRES_IN, process.env.JWT_SECRET)
 
     const cookieOptions = {
         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
@@ -60,6 +59,17 @@ export const login = catchAsync(async (req, res, next) => {
     }
     //3) If everything is ok, send token to client
     const token = signToken(user._id)
+
+    const cookieOptions = {
+        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
+        // secure: true,
+        httpOnly: true // send along with  
+    }
+
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true
+
+    res.cookie('jwt', token, cookieOptions)
+
     res.status(200).json({
         status: 'success',
         token
@@ -83,7 +93,6 @@ export const protect = catchAsync(async (req, res, next) => {
     let token
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1];
-        console.log(token)
     }
 
     if (!token) {
@@ -91,7 +100,7 @@ export const protect = catchAsync(async (req, res, next) => {
     }
     //2)Verification token
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
-    console.log(decoded)
+    // console.log(decoded)
     //3) check id user exists
     const currentUser = await User.findById(decoded.id)
 

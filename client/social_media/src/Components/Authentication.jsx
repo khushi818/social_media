@@ -1,10 +1,10 @@
 import React from "react";
 import { Stack } from "@mui/material";
-import { ToastContainer } from "react-toastify";
+
+
 const Authentication = ({ children }) => {
   return(
     <>
-    <ToastContainer/> 
   <Stack
      boxSizing={"border-box"}
      display={"flex"}

@@ -3,6 +3,8 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import Authentication from "../Components/Authentication";
+import { useGlobalContext } from "../context/GlobalContext";
+import axios from "axios";
 
 const validationSchema = yup.object({
   email: yup.string().email().required(),
@@ -10,16 +12,31 @@ const validationSchema = yup.object({
 });
 
 const Login = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const {showErrorToastMessage, showSucessToastMessage, setToken} = useGlobalContext()
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
+       const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      await axios.post(
+        '/auth/login',
+        values,
+        config,
+        { withCredentials: true}
+      ).then(response=>{
+        setToken(response.data.token) 
+        showSucessToastMessage("you are logged in")
+        navigate('/')
+      }).then(err=> showErrorToastMessage(err))
       
-      console.log(values);
     },
   });
 

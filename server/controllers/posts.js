@@ -10,7 +10,7 @@ export const createPost = catchAsync(async (req, res, next) => {
     const post = await Post.create({
         title: req.body.title,
         description: req.body.description,
-        author: req.user._id
+        author: req.user._id,
     })
 
     res.status(201).json({

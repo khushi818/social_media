@@ -7,14 +7,16 @@ import { ToastContainer } from 'react-toastify'
 import EditProfile from './EditProfile'
 import CreatePost from './CreatePost'
 import AddComment from './AddComment'
+import { useGlobalContext } from '../../context/GlobalContext'
 
 const HomePage = () => {
+  const { openEditProfile, openAddPost , openAddComment } = useGlobalContext()
   return(
     <>
     <ToastContainer/>
-    {/* <AddComment/>a */}
-    {/* <CreatePost/> */}
-    {/* <EditProfile/> */}
+    {openAddComment && <AddComment/>}
+    {openAddPost && <CreatePost/>}
+    {openEditProfile && <EditProfile/> }
   <Grid container >
    <Grid item xs={3}>
       <Profile/>

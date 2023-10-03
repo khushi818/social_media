@@ -3,38 +3,53 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import Authentication from "../Components/Authentication";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
+import { useGlobalContext } from "../context/GlobalContext";
 const validationSchema = yup.object({
-  email: yup.string().email().required(),
-  password: yup.string().min(8).required(),
-  // .matches(/^(?=.*[a-z])/, "Must Contain One LowercaseA Character")
-  // .matches(/^(?=.*[A-Z])/, "Must Contain One Uppercase Character")
-  // .matches(/^(?=.*[0-9])/, "Must Contain One Number Character")
-  // .matches(
-  //   /^(?=.*[!@#\$%\^&\*])/,
-  //   "Must Contain  One Special Case Character"
-  // ),
+  email: yup.string().email().required().matches(
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      "please enter the right format"
+  ),
+  password: yup.string().min(8).required()
+  .matches(/^(?=.*[a-z])/, "Must Contain One LowercaseA Character")
+  .matches(/^(?=.*[A-Z])/, "Must Contain One Uppercase Character")
+  .matches(/^(?=.*[0-9])/, "Must Contain One Number Character")
+  .matches(
+    /^(?=.*[!@#\$%\^&\*])/,
+    "Must Contain  One Special Case Character"
+  ),
 });
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const {showSucessToastMessage, showErrorToastMessage, setToken} = useGlobalContext()
   const formik = useFormik({
     initialValues: {
-      Name: "",
+      name: "",
       email: "",
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      
-      console.log(values);
+    onSubmit: async(values) => {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.post(
+        '/auth/signup',
+        values,
+        config
+      ).then(response=> {
+        setToken(response.data.token)
+        showSucessToastMessage("you are signed up")
+        navigate('/')
+      }).then(err=> showErrorToastMessage(err))
     },
   });
-
-  // const isRequirementMet = (regex: RegExp) => {
-  //   return regex.test(formik.values.password);
-  // };
-
+  
   return (
     <Authentication>
       <Paper elevation={2}>
@@ -58,14 +73,14 @@ const SignUp = () => {
       </Typography>
       <TextField
         fullWidth
-        id="Name"
-        name="Name"
-        label="Name"
-        value={formik.values.Name}
+        id="name"
+        name="name"
+        label="name"
+        value={formik.values.name}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        error={formik.touched.Name && Boolean(formik.errors.Name)}
-        helperText={formik.touched.Name && formik.errors.Name}
+        error={formik.touched.name && Boolean(formik.errors.name)}
+        helperText={formik.touched.name && formik.errors.name}
       />
       <TextField
         fullWidth
@@ -89,6 +104,7 @@ const SignUp = () => {
         onBlur={formik.handleBlur}
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
+        
       />
 
       <Button
@@ -96,7 +112,7 @@ const SignUp = () => {
         variant="contained"
         fullWidth
         type="submit"
-        onClick={() => navigate("/")}
+        // onClick={() => navigate("/")}
         sx={{
           marginTop: "10px",
         }}

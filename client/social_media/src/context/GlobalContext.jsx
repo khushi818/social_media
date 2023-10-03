@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { toast } from "react-toastify";
+import axios from 'axios'
 
 const GlobalContext = createContext({
    isAuthenticated : false,
@@ -11,7 +12,9 @@ const GlobalContext = createContext({
    openAddComment:false, setOpenAddComment: (_val) =>{},
    openAddPost:false, setOpenAddPost: (_val) =>{},
    openComment: false, setOpenComment: (_val) =>{},
-   expandComment: false, setExpandComment: (_val) =>{}
+   expandComment: false, setExpandComment: (_val) =>{},
+   token: '',
+   setToken:(val)=>{}
 });
 
 export const useGlobalContext = () => {
@@ -26,6 +29,10 @@ export const GlobalProvider = ({ children }) => {
    const [openAddPost, setOpenAddPost] = useState(false)
    const [openComment, setOpenComment] = useState(false)
    const [expandComment, setExpandComment] = useState(false)  
+   const  [token, setToken] = useState('')
+
+  
+
    const showSucessToastMessage = (message) => {
     toast.success(message, {
       position: toast.POSITION.TOP_RIGHT,
@@ -37,14 +44,15 @@ export const GlobalProvider = ({ children }) => {
       position: toast.POSITION.TOP_RIGHT,
     });
   };
-   useEffect(()=>{
-     if(!openModal)
-     {
-      setOpenEditProfile(false)
-      setOpenAddComment(false) 
-      setOpenAddPost(false)
-     } 
-   },[openModal])
+
+  // useEffect(()=>{
+  //    if(!openModal)
+  //    {
+  //     setOpenEditProfile(false)
+  //     setOpenAddComment(false) 
+  //     setOpenAddPost(false)
+  //    } 
+  //  },[openModal])
 
    const contextData ={
     isAuthenticated,
@@ -56,7 +64,8 @@ export const GlobalProvider = ({ children }) => {
    openAddComment, setOpenAddComment,
    openAddPost, setOpenAddPost,
    openComment, setOpenComment,
-   expandComment, setExpandComment
+   expandComment, setExpandComment,
+   token,setToken
    }
 
    return (

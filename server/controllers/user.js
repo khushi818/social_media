@@ -1,6 +1,72 @@
 import User from "../models/users.js";
 import catchAsync from '../utils/catchAsync.js'
 import AppError from '../utils/AppError.js'
+import cloudinary from "cloudinary";
+import getDataUri from "../utils/dataUri.js";
+
+export const updateUser = catchAsync(async (req, res, next) => {
+    const file = req.file;
+
+    const fileUri = getDataUri(file);
+
+
+    const result = await cloudinary.v2.uploader.upload(fileUri.content, {
+        folder: "users",
+    }, (err, result) => console.log(err));
+
+    if (!result) {
+        next(new AppError("image is not uploaded", 400))
+    }
+
+    const updateUser = await User.findByIdAndUpdate(req.user.id, {
+        profileImage: {
+
+            public_id: result.public_id,
+            url: result.secure_url,
+        },
+        ...req.body
+    }, { new: true })
+
+    res.status(200).json({
+        status: 'success',
+        updateUser
+    })
+})
+
+export const getUserById = catchAsync(async (req, res, next) => {
+    const user = await User.findById(req.params.id).populate({
+        path: "posts",
+        model: "Post",
+    }).populate('followers')
+        .populate('following')
+
+    if (!user) {
+        return next(new AppError('user not found', 404))
+    }
+
+    res.status(200).json({
+        status: 'sucesss',
+        user
+    })
+})
+
+export const getSelf = catchAsync(async (req, res, next) => {
+    const user = await User.findOne({ _id: req.user.id }).populate({
+        path: "posts",
+        model: "Post",
+    }).populate('followers')
+        .populate('following')
+
+    if (!user) {
+        return next(new AppError('user not found', 404))
+    }
+
+    res.status(200).json({
+        status: 'sucesss',
+        user
+    })
+})
+
 
 export const addFollower = catchAsync(async (req, res, next) => {
     const OtherUser = await User.findById(req.params.id)
