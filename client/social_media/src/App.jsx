@@ -17,8 +17,7 @@ function App() {
   
   useEffect(()=>{
       if(token)
-      {
-      console.log(JSON.parse(localStorage.getItem("token")))  
+      { 
       localStorage.setItem('token' , JSON.stringify(token))      
       }  
    },[token])
