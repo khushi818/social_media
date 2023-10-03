@@ -1,10 +1,11 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Stack, Box, Typography, Divider , Paper} from '@mui/material'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import AddCommentIcon from '@mui/icons-material/AddComment';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 
 const Posts = () => {
+   const [posts , setPosts] = useState([])
   return (
     <Stack flexDirection={"column"} justifyContent={"center"} alignItems={"center"} display={"flex"} marginTop={"30px"}>
          <Box display="flex" justifyContent="space-around" alignItems="left" flexDirection="column" width={"30rem"} minwidth={"300px"} 

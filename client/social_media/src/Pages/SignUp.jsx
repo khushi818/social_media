@@ -38,10 +38,11 @@ const SignUp = () => {
           "Content-type": "application/json",
         },
       };
-      const { data } = await axios.post(
+      await axios.post(
         '/auth/signup',
         values,
-        config
+        config,
+        { withCredentials: true}
       ).then(response=> {
         setToken(response.data.token)
         showSucessToastMessage("you are signed up")

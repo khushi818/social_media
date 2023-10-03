@@ -14,7 +14,8 @@ const GlobalContext = createContext({
    openComment: false, setOpenComment: (_val) =>{},
    expandComment: false, setExpandComment: (_val) =>{},
    token: '',
-   setToken:(val)=>{}
+   setToken:(val)=>{},
+   getProfileData: () =>{}
 });
 
 export const useGlobalContext = () => {
@@ -28,7 +29,8 @@ export const GlobalProvider = ({ children }) => {
    const [openAddComment, setOpenAddComment] = useState(false)
    const [openAddPost, setOpenAddPost] = useState(false)
    const [openComment, setOpenComment] = useState(false)
-   const [expandComment, setExpandComment] = useState(false)  
+   const [expandComment, setExpandComment] = useState(false)
+   const [profile , setProfile] = useState(false)  
    const  [token, setToken] = useState('')
 
   
@@ -53,8 +55,24 @@ export const GlobalProvider = ({ children }) => {
   //     setOpenAddPost(false)
   //    } 
   //  },[openModal])
+  
+  const getProfileData = async() =>{
+       const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      
+      await axios.get('/users', {} , config).then(response => {setProfile(response.data.user) 
+         console.log(profile) })        
+  }
+  
+  const getComments = async() =>{
+      await axios.get(`posts/comment/${id}`).then(response => { console.log(comments) }) 
+  }
 
-   const contextData ={
+
+  const contextData ={
     isAuthenticated,
     setIsAuthenticated,
     showErrorToastMessage,
@@ -65,7 +83,8 @@ export const GlobalProvider = ({ children }) => {
    openAddPost, setOpenAddPost,
    openComment, setOpenComment,
    expandComment, setExpandComment,
-   token,setToken
+   token,setToken,
+   getProfileData
    }
 
    return (

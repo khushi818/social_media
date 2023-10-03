@@ -9,6 +9,7 @@ import { useGlobalContext } from "./context/GlobalContext";
 function App() {
   const {token} = useGlobalContext()
   axios.defaults.baseURL = 'http://localhost:8000/api/v1/';
+  //  axios.defaults.baseURL = 'https://social-media-ahgu.onrender.com/api/v1/'
   axios.defaults.withCredentials = true
   
   const accessToken = JSON.parse(localStorage.getItem("token"))

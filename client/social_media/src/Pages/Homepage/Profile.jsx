@@ -24,12 +24,12 @@ const Profile = () => {
 
    useEffect(()=>{
      showProfile()
-   })
+   },[])
 
    const  navigate = useNavigate()
    const handleChange = async(e) =>{
-       e.preventDefault()
-         const config = {
+        e.preventDefault()
+        const config = {
         headers: {
           "Content-type": "application/json",
         },
